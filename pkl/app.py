@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
+
+
 # Load model safely (THIS runs automatically)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "animal_classifier.pkl")
@@ -56,4 +59,5 @@ if st.button("Predict Animal Class"):
 
     st.success(f"Predicted Animal Class: **{class_map[prediction]}**")
     st.info(f"Prediction Confidence: **{confidence:.2f}**")
+
 
