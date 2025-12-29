@@ -3,16 +3,24 @@ import pandas as pd
 import joblib
 import os
 
-
-# Load model safely (THIS runs automatically)
+# -------------------------------
+# Load paths safely
+# -------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 MODEL_PATH = os.path.join(BASE_DIR, "animal_classifier.pkl")
-model = joblib.load(MODEL_PATH)
+CLASS_MAP_PATH = os.path.join(BASE_DIR, "class_mapping.pkl")
+
 # -------------------------------
-# Load Model & Class Mapping
+# Load model & class mapping (ONCE)
 # -------------------------------
-model = joblib.load("animal_classifier.pkl")
-class_df = joblib.load("class_mapping.pkl")
+@st.cache_resource
+def load_artifacts():
+    model = joblib.load(MODEL_PATH)
+    class_df = joblib.load(CLASS_MAP_PATH)
+    return model, class_df
+
+model, class_df = load_artifacts()
 
 class_map = dict(zip(class_df["Class_Number"], class_df["Class_Type"]))
 
@@ -59,5 +67,3 @@ if st.button("Predict Animal Class"):
 
     st.success(f"Predicted Animal Class: **{class_map[prediction]}**")
     st.info(f"Prediction Confidence: **{confidence:.2f}**")
-
-
